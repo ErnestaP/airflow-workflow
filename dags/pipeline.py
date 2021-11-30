@@ -96,9 +96,8 @@ with DAG("my_dag",  # Dag id
                     task_id=f'parse_files{index}{index_parser}',
                     python_callable=parse_files,
                     op_kwargs={
-                        'id_downloaded': f'download_file{index}',
-                        'file_name_count': index_parser,
-                        'task_id': f'parse_files{index}{index_parser}'},
+                        'task_id': f'parse_files{index}{index_parser}',
+                        'id_uploaded_to_s3': f'upload_files_to_s3{index}{index_parser}'},
                     provide_context=True)
                 # taks do not start; need to change the state of them
 

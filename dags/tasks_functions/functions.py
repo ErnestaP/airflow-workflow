@@ -9,7 +9,7 @@ from helpers.download_file_from_ftp import download_file_from_ftp
 from helpers.unzip_files import unzip_files
 from helpers.upload_to_s3 import upload_to_s3
 from helpers.download_from_s3 import download_file_from_s3
-
+from  helpers.parse_files import crawler_parser
 
 def start():
     return
@@ -20,7 +20,7 @@ def complete(task_id, **kwargs):
     return
 
 
-def ge_name_template_for_zipped_files_count(zip_id):
+def get_name_template_for_zipped_files_count(zip_id):
     return f'count_{zip_id}'
 
 
@@ -66,14 +66,14 @@ def download_files_from_s3(id_uploaded_to_s3, **kwargs):
     s3_key = ti.xcom_pull(key=id_uploaded_to_s3)
     download_file_from_s3(s3_key)
 
-def parse_files(id_downloaded, file_name_count, task_id,  **kwargs):
+def parse_files(task_id, id_uploaded_to_s3,  **kwargs):
     resetTasksStatus(task_id, kwargs['execution_date'])
     ti = kwargs['ti']
-    xcom_id = f'{id_downloaded}_{file_name_count}'
-    value = ti.xcom_pull(key=xcom_id)
-    # crawler_parser(key_in_s3)
+    s3_key = ti.xcom_pull(key=id_uploaded_to_s3)
+    print(s3_key, 'keyy')
+    crawler_parser(s3_key)
 
-    return f'{value}_parsed'
+    # return f'{s3_key}_parsed'
 
 
 
